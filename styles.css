@@ -384,6 +384,7 @@ a {
 .card__text {
   color: var(--muted);
   font-size: 0.98rem;
+  font-weight: 500;
   line-height: 1.7;
   margin: 0;
 }
