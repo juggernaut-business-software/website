@@ -72,6 +72,38 @@ override it with `JPEG_QUALITY=2 sh tools/convert-to-jpeg.sh`.
 | Telegram | `https://t.me/+918428050777`            |
 | Email    | `mailto:hello@numerical.works`          |
 
+## SEO
+
+On-page basics are in place in `index.html`:
+
+- A `<title>` (50 chars) and meta `description` (154 chars) that cover the
+  product, not just the brand name.
+- `robots` with `max-image-preview:large`, so search engines may show full-size
+  artwork in results.
+- Open Graph and Twitter card tags, including image type, dimensions and alt
+  text, so shared links render a proper preview.
+- JSON-LD (`Organization` + `WebSite` + `SoftwareApplication`) describing the
+  product, its capabilities and its contact channels.
+- A clean heading outline: one `<h1>`, one `<h2>` per section, one `<h3>` per
+  capability, with no skipped levels.
+- Core Web Vitals: intrinsic `width`/`height` on every image (no layout shift),
+  `fetchpriority="high"` on the hero image (the LCP element), and
+  `loading="lazy" decoding="async"` on everything below the fold.
+- Descriptive internal anchor text and per-image `alt` text; only genuinely
+  decorative images (the header mark, the contact illustration) use `alt=""`.
+
+### Still needs the deployment URL
+
+These require an absolute site URL, so they are deliberately not guessed:
+
+- `<link rel="canonical">` and `og:url` in `index.html`
+- `sitemap.xml`
+- the `Sitemap:` line in `robots.txt`
+
+Adding `offers` (with real prices) to the `SoftwareApplication` JSON-LD would
+unlock Google's software-app rich result; it needs actual pricing, so it is not
+invented here.
+
 ## Previewing
 
 No build step. Open `index.html` directly, or serve the folder:
