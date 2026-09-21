@@ -92,17 +92,33 @@ On-page basics are in place in `index.html`:
 - Descriptive internal anchor text and per-image `alt` text; only genuinely
   decorative images (the header mark, the contact illustration) use `alt=""`.
 
-### Still needs the deployment URL
+### Site URL
 
-These require an absolute site URL, so they are deliberately not guessed:
+The production URL `https://juggernaut.numerical.works/` is baked into these
+places, so update all of them if the site ever moves:
 
-- `<link rel="canonical">` and `og:url` in `index.html`
-- `sitemap.xml`
-- the `Sitemap:` line in `robots.txt`
+| File | Where |
+| --- | --- |
+| `index.html` | `<link rel="canonical">`, `og:url`, `og:image`, `twitter:image`, and every `url`/`@id` in the JSON-LD |
+| `sitemap.xml` | `<loc>` |
+| `robots.txt` | `Sitemap:` |
 
-Adding `offers` (with real prices) to the `SoftwareApplication` JSON-LD would
-unlock Google's software-app rich result; it needs actual pricing, so it is not
-invented here.
+`og:image` and `twitter:image` are absolute URLs deliberately: most social
+scrapers will not resolve a relative image path, so a relative one silently
+produces a preview with no image.
+
+`robots.txt` and `sitemap.xml` must be served from the deploy root — the same
+directory as `index.html` — for crawlers to find them.
+
+### Optional, still open
+
+- `offers` on the `SoftwareApplication` JSON-LD would unlock Google's
+  software-app rich result, but it requires real prices, so none are invented.
+- A small square favicon would beat the current 976x1099 JPEG used as
+  `rel="icon"`.
+- Verify ownership in Google Search Console and submit
+  `https://juggernaut.numerical.works/sitemap.xml` — that is an account action,
+  not something the markup can do.
 
 ## Previewing
 

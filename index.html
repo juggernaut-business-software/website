@@ -8,14 +8,16 @@
   <meta name="description" content="Juggernaut is a business automation system that uses AI to automate almost 100% of your business processes — and write highly customized software for you." />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="theme-color" content="#ffffff" />
+  <link rel="canonical" href="https://juggernaut.numerical.works/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Juggernaut" />
   <meta property="og:locale" content="en" />
+  <meta property="og:url" content="https://juggernaut.numerical.works/" />
   <meta property="og:title" content="Juggernaut — AI business automation &amp; ERP software" />
   <meta property="og:description" content="Consultants, executives, HR, sales, analytics and ERP — working continuously, for less than the price of ERP software." />
-  <meta property="og:image" content="assets/img/juggernaut.jpg" />
+  <meta property="og:image" content="https://juggernaut.numerical.works/assets/img/juggernaut.jpg" />
   <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="976" />
   <meta property="og:image:height" content="1099" />
@@ -25,7 +27,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Juggernaut — AI business automation &amp; ERP software" />
   <meta name="twitter:description" content="Consultants, executives, HR, sales, analytics and ERP — working continuously, for less than the price of ERP software." />
-  <meta name="twitter:image" content="assets/img/juggernaut.jpg" />
+  <meta name="twitter:image" content="https://juggernaut.numerical.works/assets/img/juggernaut.jpg" />
   <meta name="twitter:image:alt" content="Juggernaut, the AI character that automates your business" />
 
   <link rel="icon" href="assets/img/juggernaut.jpg" />
@@ -41,9 +43,17 @@
     "@graph": [
       {
         "@type": "Organization",
+        "@id": "https://juggernaut.numerical.works/#organization",
         "name": "Juggernaut",
+        "url": "https://juggernaut.numerical.works/",
         "description": "Juggernaut is a business automation system that uses AI to automate almost 100% of business processes.",
         "email": "hello@numerical.works",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://juggernaut.numerical.works/assets/img/juggernaut.jpg",
+          "width": 976,
+          "height": 1099
+        },
         "contactPoint": [
           {
             "@type": "ContactPoint",
@@ -56,12 +66,27 @@
       },
       {
         "@type": "WebSite",
+        "@id": "https://juggernaut.numerical.works/#website",
+        "url": "https://juggernaut.numerical.works/",
         "name": "Juggernaut",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://juggernaut.numerical.works/#organization" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://juggernaut.numerical.works/#webpage",
+        "url": "https://juggernaut.numerical.works/",
+        "name": "Juggernaut — AI business automation & ERP software",
+        "description": "Juggernaut is a business automation system that uses AI to automate almost 100% of your business processes — and write highly customized software for you.",
+        "isPartOf": { "@id": "https://juggernaut.numerical.works/#website" },
+        "about": { "@id": "https://juggernaut.numerical.works/#software" },
         "inLanguage": "en"
       },
       {
         "@type": "SoftwareApplication",
+        "@id": "https://juggernaut.numerical.works/#software",
         "name": "Juggernaut",
+        "url": "https://juggernaut.numerical.works/",
         "applicationCategory": "BusinessApplication",
         "operatingSystem": "Web",
         "description": "A business automation system that uses AI to automate almost 100% of business processes, and writes highly customized software for your business — creating an ERP on its own.",
@@ -79,7 +104,7 @@
           "Wise Guy",
           "Saves A Lot"
         ],
-        "publisher": { "@type": "Organization", "name": "Juggernaut" }
+        "publisher": { "@id": "https://juggernaut.numerical.works/#organization" }
       }
     ]
   }
