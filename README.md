@@ -10,7 +10,8 @@ index.html                  the page (hero, overview, capabilities, contact)
 styles.css                  all styling and design tokens
 script.js                   contact modal + reveal-on-scroll
 content.md                  source copy
-assets/img/                 character artwork
+assets/img/                 character artwork (.jpg used by the page, .png originals kept)
+tools/convert-to-jpeg.sh    regenerates the .jpg files from the .png originals
 docs/requirements/          the original brief
 ```
 
@@ -28,6 +29,38 @@ docs/requirements/          the original brief
 - **Artwork** ships as opaque PNGs with white backgrounds, so images sit
   directly on white surfaces (`object-fit: contain`, white media areas) rather
   than on tinted panels, which would reveal a visible white box.
+
+## Images
+
+The page loads the **JPEG** files; the PNG originals are kept alongside them
+and are not referenced by `index.html`.
+
+```
+assets/img/                .png originals (unused by the page)
+                           .jpg web versions (used by index.html)
+```
+
+Converting cut the artwork from ~21 MB to ~1.7 MB (a ~92% reduction) with no
+change to pixel dimensions. Two details matter:
+
+- **Flattened onto white.** The artwork is drawn on opaque white, but a few
+  files carry genuinely transparent corners. JPEG has no alpha channel, and
+  ffmpeg's default behaviour leaves those areas black, so the conversion first
+  composites each image onto a white canvas. This is also why the page keeps
+  images on white surfaces: a JPEG of a white-background image would show a
+  faint off-white rectangle against any tinted panel.
+- **4:4:4 sampling.** ffmpeg encodes these as full-chroma JPEGs, so there is no
+  chroma bleed around the coloured linework.
+
+After adding new artwork, regenerate the JPEGs:
+
+```sh
+sh tools/convert-to-jpeg.sh
+```
+
+It needs `ffmpeg` (`brew install ffmpeg`) and is safe to re-run. Quality
+defaults to `-q:v 4` (~90%, measured at 38–46 dB PSNR against the originals);
+override it with `JPEG_QUALITY=2 sh tools/convert-to-jpeg.sh`.
 
 ## Contact details used
 
