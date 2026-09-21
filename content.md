@@ -40,6 +40,10 @@ Managing people, payroll, recruitment, salary negotiations, checking on human ef
 
 Juggernaut is a librarian; it stores every business document of yours and retrieves it lightning fast.
 
+## Software Developer
+
+Juggernaut can learn about your business and write highly customized software for it, thus creating an ERP on its own.
+
 ## Wise Guy
 
 As time progresses, Juggernaut becomes a wise guy; it uses its knowledge to make decisions, solve problems, and advance knowledge. It advises you and your teams on how to run your business, and it runs it all by itself if you wish.
