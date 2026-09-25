@@ -40,6 +40,10 @@ assets/img/                .png originals (unused by the page)
                            .jpg web versions (used by index.html)
 ```
 
+`juggernaut_judge.jpeg` and `juggernaut_counting_money.jpeg` arrived as JPEGs
+with no PNG original, so `tools/convert-to-jpeg.sh` — which walks `*.png` —
+leaves them untouched and they are referenced directly by `index.html`.
+
 Converting cut the artwork from ~21 MB to ~1.7 MB (a ~92% reduction) with no
 change to pixel dimensions. Two details matter:
 

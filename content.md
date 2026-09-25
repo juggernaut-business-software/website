@@ -44,6 +44,14 @@ Juggernaut is a librarian; it stores every business document of yours and retrie
 
 Juggernaut can learn about your business and write highly customized software for it, thus creating an ERP on its own.
 
+## Legal Advisor
+
+Juggernaut learns the laws of your business and the laws of the land it operates in; it keeps up with every statute and regulation, and gives you legal counsel.
+
+## Accountant
+
+Juggernaut learns the accounting standards your business must follow; it keeps your books, files your returns, and provides automated accounting services.
+
 ## Wise Guy
 
 As time progresses, Juggernaut becomes a wise guy; it uses its knowledge to make decisions, solve problems, and advance knowledge. It advises you and your teams on how to run your business, and it runs it all by itself if you wish.
