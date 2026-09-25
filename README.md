@@ -10,8 +10,8 @@ index.html                  the page (hero, overview, capabilities, contact)
 styles.css                  all styling and design tokens
 script.js                   contact modal + reveal-on-scroll
 content.md                  source copy
-assets/img/                 character artwork (.jpg used by the page, .png originals kept)
-tools/convert-to-jpeg.sh    regenerates the .jpg files from the .png originals
+assets/img/                 character artwork (.webp, the only format kept)
+tools/convert-to-webp.sh    regenerates the .webp files from the source artwork
 docs/requirements/          the original brief
 ```
 
@@ -26,60 +26,85 @@ docs/requirements/          the original brief
   page still reads well offline.
 - **Contact button** at the end of the page carries the 👋 emoji and opens a
   native `<dialog>` modal with Call, WhatsApp, Signal, Telegram and Email.
-- **Artwork** ships as opaque PNGs with white backgrounds, so images sit
+- **Artwork** ships as opaque WebP files with white backgrounds, so images sit
   directly on white surfaces (`object-fit: contain`, white media areas) rather
   than on tinted panels, which would reveal a visible white box.
 
 ## Images
 
-The page loads the **JPEG** files; the PNG originals are kept alongside them
-and are not referenced by `index.html`.
+The page loads the **WebP** files, and WebP is now the only image format left in
+`assets/img`: the PNG originals and the JPEGs the site used to ship were deleted
+once the WebP versions were verified.
 
 ```
-assets/img/                .png originals (unused by the page)
-                           .jpg web versions (used by index.html)
+assets/img/                .webp web versions (the only format kept)
 ```
 
 `juggernaut_judge.jpeg` and `juggernaut_counting_money.jpg` arrived as JPEGs
-with no PNG original, so `tools/convert-to-jpeg.sh` — which walks `*.png` —
-leaves them untouched and they are referenced directly by `index.html`.
+with no PNG original, so those two were converted from the JPEGs directly.
 
 Both arrived **arithmetic-coded** — `SOF9` plus a `DAC` table instead of the
 usual `SOF0`/`DHT` — which browsers refuse to render (Safari reports "image
 corrupt or truncated"). They were decoded with `sips -s format png` (macOS
-ImageIO reads arithmetic coding; **ffmpeg does not**) and re-encoded with the
-settings above, so both are now baseline, 4:4:4 JPEGs. Arithmetic-coded files
-look perfectly ordinary to `file(1)` and `sips`, so check new artwork before
-shipping it — `ffprobe` fails on arithmetic coding with "No JPEG data found
-in image":
+ImageIO reads arithmetic coding; **ffmpeg does not**) and re-encoded, so both
+are now baseline images. Arithmetic-coded files look perfectly ordinary to
+`file(1)` and `sips`, so check new artwork before shipping it — `ffprobe` fails
+on arithmetic coding with "No JPEG data found in image":
 
 ```sh
 ffprobe -v error -select_streams v:0 \
   -show_entries stream=codec_name,width,height,pix_fmt -of default=nw=1 \
-  assets/img/<artwork>.jpg
+  assets/img/<artwork>
 ```
 
-Converting cut the artwork from ~21 MB to ~1.7 MB (a ~92% reduction) with no
-change to pixel dimensions. Two details matter:
+Converting cut the artwork from 23.5 MB of source files (21.6 MB of PNGs plus
+the 1.9 MB of JPEGs) to 1.2 MB — a 95% reduction — with no change to pixel
+dimensions, and shaved ~35% off the JPEGs the page used to load (1.9 MB ->
+1.2 MB). Two details matter:
 
-- **Flattened onto white.** The artwork is drawn on opaque white, but a few
-  files carry genuinely transparent corners. JPEG has no alpha channel, and
-  ffmpeg's default behaviour leaves those areas black, so the conversion first
-  composites each image onto a white canvas. This is also why the page keeps
-  images on white surfaces: a JPEG of a white-background image would show a
-  faint off-white rectangle against any tinted panel.
-- **4:4:4 sampling.** ffmpeg encodes these as full-chroma JPEGs, so there is no
-  chroma bleed around the coloured linework.
+- **Flattened onto white.** WebP is able to carry alpha, but the artwork is
+  drawn on opaque white and a few files carry genuinely transparent corners, so
+  every image is still composited onto a white canvas. That keeps the rendering
+  identical to the JPEGs — and keeps the page's images on white surfaces: a
+  white-background image would show a faint off-white rectangle against any
+  tinted panel.
+- **Sharp chroma.** `cwebp -sharp_yuv` keeps the coloured linework crisp rather
+  than letting chroma bleed across edges.
 
-After adding new artwork, regenerate the JPEGs:
+After adding new artwork, regenerate the WebP files:
 
 ```sh
-sh tools/convert-to-jpeg.sh
+sh tools/convert-to-webp.sh
 ```
 
-It needs `ffmpeg` (`brew install ffmpeg`) and is safe to re-run. Quality
-defaults to `-q:v 4` (~90%, measured at 38–46 dB PSNR against the originals);
-override it with `JPEG_QUALITY=2 sh tools/convert-to-jpeg.sh`.
+It needs `ffmpeg` (`brew install ffmpeg`) to flatten and `cwebp`
+(`brew install webp`) to encode — Homebrew's ffmpeg ships without `libwebp`, so
+`ffmpeg -c:v libwebp` is not available here. It is safe to re-run: a PNG is the
+preferred source, and a JPEG is only converted when it has no PNG sibling.
+
+On this tree a plain re-run converts nothing — it prints `converted 0 image(s)`
+— because the PNGs it was written against are no longer in the working tree.
+They are still in the commit that deleted them, so any single WebP can be
+rebuilt from history if it is ever lost:
+
+```sh
+git show <deleting-commit>^:assets/img/<artwork>.png > assets/img/<artwork>.png
+sh tools/convert-to-webp.sh
+rm assets/img/<artwork>.png          # WebP stays the only format kept
+```
+
+Quality defaults to `-q 85`, which measures 43-50 dB PSNR against the source
+for sixteen of the seventeen files — about a decibel under the JPEG the page
+used to load — and 32 dB for `jaggurnaut_playful`. That outlier is not a
+quality setting: it is the hardest file in the set (even its JPEG sibling was
+the weakest of the fifteen at 33.7 dB), and it loses detail to VP8's
+half-resolution chroma rather than to the quantiser, so q90 earns it 0.05 dB
+while a global q88 costs 18% more bytes for 0.03 dB. Override the quality with
+`WEBP_QUALITY=90 sh tools/convert-to-webp.sh` if that ever needs revisiting.
+
+If a social or chat preview ever renders without an image, `og:image` /
+`twitter:image` pointing at a `.webp` is the first thing to check: WebP is
+widely accepted by modern scrapers, but a few still expect JPEG or PNG.
 
 ## Contact details used
 
@@ -133,7 +158,7 @@ directory as `index.html` — for crawlers to find them.
 
 - `offers` on the `SoftwareApplication` JSON-LD would unlock Google's
   software-app rich result, but it requires real prices, so none are invented.
-- A small square favicon would beat the current 976x1099 JPEG used as
+- A small square favicon would beat the current 976x1099 WebP used as
   `rel="icon"`.
 - Verify ownership in Google Search Console and submit
   `https://juggernaut.numerical.works/sitemap.xml` — that is an account action,
