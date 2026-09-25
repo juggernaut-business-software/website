@@ -40,9 +40,24 @@ assets/img/                .png originals (unused by the page)
                            .jpg web versions (used by index.html)
 ```
 
-`juggernaut_judge.jpeg` and `juggernaut_counting_money.jpeg` arrived as JPEGs
+`juggernaut_judge.jpeg` and `juggernaut_counting_money.jpg` arrived as JPEGs
 with no PNG original, so `tools/convert-to-jpeg.sh` — which walks `*.png` —
 leaves them untouched and they are referenced directly by `index.html`.
+
+Both arrived **arithmetic-coded** — `SOF9` plus a `DAC` table instead of the
+usual `SOF0`/`DHT` — which browsers refuse to render (Safari reports "image
+corrupt or truncated"). They were decoded with `sips -s format png` (macOS
+ImageIO reads arithmetic coding; **ffmpeg does not**) and re-encoded with the
+settings above, so both are now baseline, 4:4:4 JPEGs. Arithmetic-coded files
+look perfectly ordinary to `file(1)` and `sips`, so check new artwork before
+shipping it — `ffprobe` fails on arithmetic coding with "No JPEG data found
+in image":
+
+```sh
+ffprobe -v error -select_streams v:0 \
+  -show_entries stream=codec_name,width,height,pix_fmt -of default=nw=1 \
+  assets/img/<artwork>.jpg
+```
 
 Converting cut the artwork from ~21 MB to ~1.7 MB (a ~92% reduction) with no
 change to pixel dimensions. Two details matter:
